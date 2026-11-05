@@ -23,6 +23,12 @@ class Gem(Base):
         nullable=False,
     )
 
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+
     price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
 
     stock: Mapped[int] = mapped_column(Integer, default = 0, server_default="0", nullable=False)

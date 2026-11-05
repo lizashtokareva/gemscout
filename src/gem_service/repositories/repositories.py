@@ -1,33 +1,36 @@
+from datetime import datetime
 from decimal import Decimal
 
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from gem_service.models import Gem
 
 
 class GemRepository:
-    def __init__(self, session: Session):
+    def __init__(self, session: AsyncSession):
         self.session = session
 
-    def get_by_id(self, gem_id: int) -> Gem | None:
-        gem = self.session.get(Gem, gem_id)
+    async def get_by_id(self, gem_id: int) -> Gem | None:
+        gem = await self.session.get(Gem, gem_id)
         if gem is None:
             return None
         return gem
 
-    def get_all(self) -> list[Gem]:
-        gems = self.session.scalars(select(Gem)).all()
+    async def get_all(self) -> list[Gem]:
+        result = await self.session.scalars(select(Gem))
+        gems = result.all()
         return gems
 
-    def create(self, name, price, stock: int = 0):
+    async def create(self, name, price, stock: int = 0) -> Gem:
         gem = Gem(name=name, price=price, stock=stock)
 
         self.session.add(gem)
-        self.session.flush()
+        await self.session.flush()
 
         return gem
 
-    def update(
+    async def update(
             self,
             gem_id: int,
             name: str,
@@ -35,7 +38,7 @@ class GemRepository:
             stock: int
     ) -> Gem | None:
 
-        gem = self.get_by_id(gem_id)
+        gem = await self.get_by_id(gem_id)
 
         if gem is None:
             return None
@@ -43,18 +46,28 @@ class GemRepository:
         gem.name = name
         gem.price = price
         gem.stock = stock
-        self.session.flush()
+        gem.updated_at = datetime.now()
+        await self.session.flush()
 
         return gem
 
-    def delete(self, gem_id: int) -> bool:
+    async def delete(self, gem_id: int) -> bool:
         gem = self.get_by_id(gem_id)
         if gem is None:
             return False
-        self.session.delete(gem)
-        self.session.flush()
+        await self.session.delete(gem)
+        await self.session.flush()
         return True
 
+    async def get_by_name(self, name: str) -> Gem | None:
+        return await self.session.scalar(
+            select(Gem).where(Gem.name == name)
+        )
+
+
+    async def get_expensive_gems(self) -> list[Gem]:
+        result = await self.session.scalars(select(Gem).where(Gem.price > 1000).order_by(Gem.price))
+        return result.all()
 
 
 
