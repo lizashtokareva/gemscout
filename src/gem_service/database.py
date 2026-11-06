@@ -8,7 +8,6 @@ from sqlalchemy.ext.asyncio import (
 
 from .config import settings
 
-
 engine = create_async_engine(
     settings.database_url,
     pool_size=settings.db_pool_size,

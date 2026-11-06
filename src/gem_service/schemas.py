@@ -1,12 +1,14 @@
 from datetime import datetime
 from decimal import Decimal
-from pydantic import BaseModel, Field, ConfigDict
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class GemCreate(BaseModel):
-    name: str = Field(min_length = 1, max_length=100)
+    name: str = Field(min_length=1, max_length=100)
     price: Decimal = Field(gt=0)
     stock: int = Field(default=0, ge=0)
+
 
 class GemRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)

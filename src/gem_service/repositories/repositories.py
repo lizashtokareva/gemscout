@@ -1,14 +1,15 @@
 from datetime import datetime
 from decimal import Decimal
 
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from gem_service.models import Gem
 
 
 class GemRepository:
-    def __init__(self, session: AsyncSession):
+    def __init__(self, session: AsyncSession) -> None:
+
         self.session = session
 
     async def get_by_id(self, gem_id: int) -> Gem | None:
@@ -22,7 +23,7 @@ class GemRepository:
         gems = result.all()
         return gems
 
-    async def create(self, name, price, stock: int = 0) -> Gem:
+    async def create(self, name: str, price: Decimal, stock: int = 0) -> Gem:
         gem = Gem(name=name, price=price, stock=stock)
 
         self.session.add(gem)
@@ -31,11 +32,7 @@ class GemRepository:
         return gem
 
     async def update(
-            self,
-            gem_id: int,
-            name: str,
-            price: Decimal,
-            stock: int
+        self, gem_id: int, name: str, price: Decimal, stock: int
     ) -> Gem | None:
 
         gem = await self.get_by_id(gem_id)
@@ -60,14 +57,10 @@ class GemRepository:
         return True
 
     async def get_by_name(self, name: str) -> Gem | None:
-        return await self.session.scalar(
-            select(Gem).where(Gem.name == name)
-        )
-
+        return await self.session.scalar(select(Gem).where(Gem.name == name))
 
     async def get_expensive_gems(self) -> list[Gem]:
-        result = await self.session.scalars(select(Gem).where(Gem.price > 1000).order_by(Gem.price))
+        result = await self.session.scalars(
+            select(Gem).where(Gem.price > 1000).order_by(Gem.price)
+        )
         return result.all()
-
-
-
