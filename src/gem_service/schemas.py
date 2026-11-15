@@ -1,3 +1,5 @@
+import uuid
+from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
 
@@ -19,3 +21,9 @@ class GemRead(BaseModel):
     stock: int
     created_at: datetime
     updated_at: datetime
+
+
+@dataclass(frozen=True)
+class CurrentUser:
+    id: uuid.UUID
+    role: str

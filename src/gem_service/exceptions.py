@@ -4,3 +4,15 @@ class GemAlreadyExistsError(Exception):
 
 class GemNotFoundError(Exception):
     pass
+
+
+class IncorrectPriceError(Exception):
+    pass
+
+
+class GemPermissionDeniedError(Exception):
+    pass
+
+
+class IdempotencyRecordNotFoundError(Exception):
+    pass
