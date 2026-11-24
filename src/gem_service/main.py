@@ -5,11 +5,14 @@ from gem_service.exception_handlers import (
     gem_not_found_handler,
 )
 from gem_service.exceptions import GemAlreadyExistsError, GemNotFoundError
+from gem_service.routers import gem_images
 from gem_service.routers.gems import router as gem_router
 
 app = FastAPI(title="GemScout | Gem Service")
 
 app.include_router(gem_router)
+
+app.include_router(gem_images.router)
 
 app.add_exception_handler(GemAlreadyExistsError, gem_already_exists_handler)
 

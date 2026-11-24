@@ -16,3 +16,19 @@ class GemPermissionDeniedError(Exception):
 
 class IdempotencyRecordNotFoundError(Exception):
     pass
+
+
+class IncorrectTypeError(Exception):
+    pass
+
+
+class ImageNotFoundError(Exception):
+    pass
+
+
+class ImageTooLargeError(Exception):
+    pass
+
+
+class ImageAlreadyExistsError(Exception):
+    pass

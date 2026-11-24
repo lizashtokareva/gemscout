@@ -24,3 +24,12 @@ class IdempotencyRecordDTO:
     response_body: dict
     created_at: datetime
     request_hash: str
+
+
+@dataclass
+class GemImageDTO:
+    id: int
+    gem_id: int
+    object_key: str
+    content_type: str
+    created_at: datetime

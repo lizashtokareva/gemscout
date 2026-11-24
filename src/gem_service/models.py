@@ -5,6 +5,7 @@ from decimal import Decimal
 from sqlalchemy import (
     CheckConstraint,
     DateTime,
+    ForeignKey,
     Integer,
     Numeric,
     String,
@@ -85,6 +86,20 @@ class IdempotencyRecord(Base):
         JSONB,
         nullable=True,
     )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+
+
+class GemImage(Base):
+    __tablename__ = "gem_images"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    gem_id: Mapped[int] = mapped_column(
+        ForeignKey("gems.id"), nullable=False, index=True
+    )
+    object_key: Mapped[str] = mapped_column(String(1024), unique=True, nullable=False)
+    content_type: Mapped[str] = mapped_column(String(100), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )

@@ -27,3 +27,11 @@ class GemRead(BaseModel):
 class CurrentUser:
     id: uuid.UUID
     role: str
+
+
+class GemImageUploadRequest(BaseModel):
+    content_type: str
+
+
+class ConfirmImageUploadRequest(BaseModel):
+    object_key: str
