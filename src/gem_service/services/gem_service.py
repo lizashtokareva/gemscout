@@ -8,12 +8,16 @@ from gem_service.exceptions import (
     GemPermissionDeniedError,
     IncorrectPriceError,
 )
+from gem_service.repositories.outbox_repository import OutboxRepository
 from gem_service.repositories.repositories import GemRepository
 
 
 class GemService:
-    def __init__(self, repository: GemRepository) -> None:
+    def __init__(
+        self, repository: GemRepository, outbox_repository: OutboxRepository
+    ) -> None:
         self.repository = repository
+        self.outbox_repository = outbox_repository
 
     async def create_gem(
         self,
@@ -32,6 +36,10 @@ class GemService:
 
         gem = await self.repository.create(
             name=name, price=price, stock=stock, owner_id=owner_id
+        )
+        await self.outbox_repository.create(
+            event_type="gem_created",
+            payload={"gem_id": gem.id, "name": gem.name, "price": str(gem.price)},
         )
 
         await self.repository.commit()

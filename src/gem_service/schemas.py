@@ -35,3 +35,9 @@ class GemImageUploadRequest(BaseModel):
 
 class ConfirmImageUploadRequest(BaseModel):
     object_key: str
+
+
+class GemCreatedEvent(BaseModel):
+    gem_id: int
+    name: str
+    price: Decimal

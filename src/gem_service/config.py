@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     s3_secret_key: SecretStr
     s3_bucket: str = "gemscout-images"
     s3_region: str = "us-east-1"
+    rabbitmq_url: str
 
 
 settings = Settings()

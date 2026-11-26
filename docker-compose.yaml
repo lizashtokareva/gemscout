@@ -1,0 +1,10 @@
+name: gemscout
+
+services:
+  rabbitmq:
+    image: rabbitmq:4-management
+    ports:
+      - "5672:5672"   # порт протокола AMQP для Python
+      - "15672:15672" # веб-панель управления (логин/пароль: guest / guest)
+
+
